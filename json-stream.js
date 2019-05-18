@@ -5,10 +5,10 @@ import URIUtil from './utils/uri'
 const OboeExtended = (arg: string | Object) => {
 
 
-  window.location = ''
+  window.location = '';
 
   if(!window.XMLHttpRequest.isRNFBPolyfill ) {
-    window.XMLHttpRequest = XMLHttpRequest
+    window.XMLHttpRequest = XMLHttpRequest;
     console.warn(
         'Use JSONStream will automatically replace window.XMLHttpRequest with RNFetchBlob.polyfill.XMLHttpRequest. ' +
         'You are seeing this warning because you did not replace it manually.'
@@ -27,7 +27,7 @@ const OboeExtended = (arg: string | Object) => {
 
   }
   else if(typeof arg === 'object') {
-    let headers = arg.headers || {}
+    let headers = arg.headers || {};
     if(URIUtil.isFileURI(arg.url)) {
       headers.noCache = true
     }
@@ -37,6 +37,6 @@ const OboeExtended = (arg: string | Object) => {
     })
   }
   return Oboe(arg)
-}
+};
 
 export default OboeExtended

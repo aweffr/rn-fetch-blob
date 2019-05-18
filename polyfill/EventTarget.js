@@ -4,16 +4,16 @@
 
 import Log from '../utils/log.js'
 
-const log = new Log('EventTarget')
+const log = new Log('EventTarget');
 
-log.disable()
+log.disable();
 
 export default class EventTarget {
 
   listeners : any;
 
   constructor() {
-    log.info('constructor called')
+    log.info('constructor called');
     this.listeners = {}
   }
 
@@ -23,7 +23,7 @@ export default class EventTarget {
    * @param {(Event) => void} cb   Event handler function
    */
   addEventListener(type:string, cb : () => void) {
-    log.info('add event listener', type, cb)
+    log.info('add event listener', type, cb);
     if(!(type in this.listeners)) {
       this.listeners[type] = []
     }
@@ -37,13 +37,13 @@ export default class EventTarget {
    * @return {[type]}             [description]
    */
   removeEventListener(type:string, cb:() => void) {
-    log.info('remove event listener', type, cb)
+    log.info('remove event listener', type, cb);
     if(!(type in this.listeners))
-      return
-    let handlers = this.listeners[type]
+      return;
+    let handlers = this.listeners[type];
     for(let i in handlers) {
       if(cb === handlers[i]) {
-        handlers.splice(i,1)
+        handlers.splice(i,1);
         return this.removeEventListener(type, cb)
       }
     }
@@ -55,10 +55,10 @@ export default class EventTarget {
    * @param {Event} event Event data payload.
    */
   dispatchEvent(type:string,event:Event) {
-    log.info('dispatch event', event)
+    log.info('dispatch event', event);
     if(!(type in this.listeners))
-      return
-    let handlers = this.listeners[type]
+      return;
+    let handlers = this.listeners[type];
     for(let i in handlers) {
       handlers[i].call(this, event)
     }

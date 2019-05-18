@@ -11,9 +11,9 @@ import fs from '../fs'
 
 const RNFetchBlob = NativeModules.RNFetchBlob;
 
-const log = new Log('FileReader')
+const log = new Log('FileReader');
 
-log.level(3)
+log.level(3);
 
 export default class FileReader extends EventTarget {
 
@@ -43,8 +43,8 @@ export default class FileReader extends EventTarget {
   onloadend:(e:Event) => void;
 
   constructor() {
-    super()
-    log.verbose('file reader const')
+    super();
+    log.verbose('file reader const');
     this._result = null
   }
 
@@ -69,8 +69,8 @@ export default class FileReader extends EventTarget {
   }
 
   dispatchEvent(event, e) {
-    log.verbose('dispatch event', event, e)
-    super.dispatchEvent(event, e)
+    log.verbose('dispatch event', event, e);
+    super.dispatchEvent(event, e);
     if(typeof this[`on${event}`] === 'function') {
       this[`on${event}`](e)
     }

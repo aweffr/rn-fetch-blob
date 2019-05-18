@@ -10,7 +10,7 @@ import RNFetchBlobWriteStream from './class/RNFetchBlobWriteStream'
 import RNFetchBlobReadStream from './class/RNFetchBlobReadStream'
 import RNFetchBlobFile from './class/RNFetchBlobFile'
 
-const RNFetchBlob: RNFetchBlobNative = NativeModules.RNFetchBlob
+const RNFetchBlob: RNFetchBlobNative = NativeModules.RNFetchBlob;
 
 const dirs = {
   DocumentDir :  RNFetchBlob.DocumentDir,
@@ -24,10 +24,10 @@ const dirs = {
   SDCardApplicationDir: RNFetchBlob.SDCardApplicationDir, // Deprecated
   MainBundleDir : RNFetchBlob.MainBundleDir,
   LibraryDir : RNFetchBlob.LibraryDir
-}
+};
 
 function addCode(code: string, error: Error): Error {
-  error.code = code
+  error.code = code;
   return error
 }
 
@@ -37,11 +37,11 @@ function addCode(code: string, error: Error): Error {
  * @return {RNFetchBlobSession}
  */
 function session(name: string): RNFetchBlobSession {
-  let s = RNFetchBlobSession.getSession(name)
+  let s = RNFetchBlobSession.getSession(name);
   if (s)
-    return new RNFetchBlobSession(name)
+    return new RNFetchBlobSession(name);
   else {
-    RNFetchBlobSession.setSession(name, [])
+    RNFetchBlobSession.setSession(name, []);
     return new RNFetchBlobSession(name, [])
   }
 }
@@ -84,8 +84,8 @@ function writeStream(
   return new Promise((resolve, reject) => {
     RNFetchBlob.writeStream(path, encoding, append, (errCode, errMsg, streamId: string) => {
       if (errMsg) {
-        const err = new Error(errMsg)
-        err.code = errCode
+        const err = new Error(errMsg);
+        err.code = errCode;
         reject(err)
       }
       else
@@ -207,10 +207,10 @@ function stat(path: string): Promise<RNFetchBlobFile> {
     }
     RNFetchBlob.stat(path, (err, stat) => {
       if (err)
-        reject(new Error(err))
+        reject(new Error(err));
       else {
         if (stat) {
-          stat.size = parseInt(stat.size)
+          stat.size = parseInt(stat.size);
           stat.lastModified = parseInt(stat.lastModified)
         }
         resolve(stat)
@@ -231,7 +231,7 @@ function scanFile(pairs: any): Promise {
     }
     RNFetchBlob.scanFile(pairs, (err) => {
       if (err)
-        reject(addCode('EUNSPECIFIED', new Error(err)))
+        reject(addCode('EUNSPECIFIED', new Error(err)));
       else
         resolve()
     })
@@ -252,7 +252,7 @@ function cp(path: string, dest: string): Promise<boolean> {
     }
     RNFetchBlob.cp(path, dest, (err, res) => {
       if (err)
-        reject(addCode('EUNSPECIFIED', new Error(err)))
+        reject(addCode('EUNSPECIFIED', new Error(err)));
       else
         resolve(res)
     })
@@ -266,7 +266,7 @@ function mv(path: string, dest: string): Promise<boolean> {
     }
     RNFetchBlob.mv(path, dest, (err, res) => {
       if (err)
-        reject(addCode('EUNSPECIFIED', new Error(err)))
+        reject(addCode('EUNSPECIFIED', new Error(err)));
       else
         resolve(res)
     })
@@ -280,7 +280,7 @@ function lstat(path: string): Promise<Array<RNFetchBlobFile>> {
     }
     RNFetchBlob.lstat(path, (err, stat) => {
       if (err)
-        reject(addCode('EUNSPECIFIED', new Error(err)))
+        reject(addCode('EUNSPECIFIED', new Error(err)));
       else
         resolve(stat)
     })
@@ -340,22 +340,22 @@ function slice(src: string, dest: string, start: number, end: number): Promise {
     return reject(addCode('EINVAL', new TypeError('Missing argument "src" and/or "destination"')))
   }
 
-  let p = Promise.resolve()
-  let size = 0
+  let p = Promise.resolve();
+  let size = 0;
 
   function normalize(num, size) {
     if (num < 0)
-      return Math.max(0, size + num)
+      return Math.max(0, size + num);
     if (!num && num !== 0)
-      return size
+      return size;
     return num
   }
 
   if (start < 0 || end < 0 || !start || !end) {
     p = p.then(() => stat(src))
       .then((stat) => {
-        size = Math.floor(stat.size)
-        start = normalize(start || 0, size)
+        size = Math.floor(stat.size);
+        start = normalize(start || 0, size);
         end = normalize(end, size)
       })
   }
@@ -382,7 +382,7 @@ function df(): Promise<{ free: number, total: number }> {
   return new Promise((resolve, reject) => {
     RNFetchBlob.df((err, stat) => {
       if (err)
-        reject(addCode('EUNSPECIFIED', new Error(err)))
+        reject(addCode('EUNSPECIFIED', new Error(err)));
       else
         resolve(stat)
     })

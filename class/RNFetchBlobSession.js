@@ -8,9 +8,9 @@ import {
  NativeAppEventEmitter,
 } from 'react-native'
 
-const RNFetchBlob = NativeModules.RNFetchBlob
+const RNFetchBlob = NativeModules.RNFetchBlob;
 
-let sessions = {}
+let sessions = {};
 
 export default class RNFetchBlobSession {
 
@@ -29,25 +29,25 @@ export default class RNFetchBlobSession {
   }
 
   constructor(name:string, list:Array<string>) {
-    this.name = name
+    this.name = name;
     if(!sessions[name]) {
       if(Array.isArray(list))
-      sessions[name] = list
+      sessions[name] = list;
       else
       sessions[name] = []
     }
   }
 
   add(path:string):RNFetchBlobSession {
-    sessions[this.name].push(path)
+    sessions[this.name].push(path);
     return this
   }
 
   remove(path:string):RNFetchBlobSession {
-    let list = sessions[this.name]
+    let list = sessions[this.name];
     for(let i of list) {
       if(list[i] === path) {
-        sessions[this.name].splice(i, 1)
+        sessions[this.name].splice(i, 1);
         break;
       }
     }
@@ -62,9 +62,9 @@ export default class RNFetchBlobSession {
     return new Promise((resolve, reject) => {
       RNFetchBlob.removeSession(sessions[this.name], (err) => {
         if(err)
-          reject(new Error(err))
+          reject(new Error(err));
         else {
-          delete sessions[this.name]
+          delete sessions[this.name];
           resolve()
         }
       })

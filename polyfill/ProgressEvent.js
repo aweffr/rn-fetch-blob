@@ -11,9 +11,9 @@ export default class ProgressEvent extends Event {
   _total : numver = -1;
 
   constructor(lengthComputable, loaded, total) {
-    super()
+    super();
     this._lengthComputable = lengthComputable;
-    this._loaded = loaded
+    this._loaded = loaded;
     this._total = total
   }
 

@@ -9,7 +9,7 @@ import {
   NativeAppEventEmitter,
 } from 'react-native'
 
-const RNFetchBlob:RNFetchBlobNative = NativeModules.RNFetchBlob
+const RNFetchBlob:RNFetchBlobNative = NativeModules.RNFetchBlob;
 
 /**
  * Open a file using UIDocumentInteractionController
@@ -19,7 +19,7 @@ const RNFetchBlob:RNFetchBlobNative = NativeModules.RNFetchBlob
  */
 function previewDocument(path:string, scheme:string) {
   if(Platform.OS === 'ios')
-    return RNFetchBlob.previewDocument('file://' + path, scheme)
+    return RNFetchBlob.previewDocument('file://' + path, scheme);
   else
     return Promise.reject('RNFetchBlob.openDocument only supports IOS.')
 }
@@ -32,7 +32,7 @@ function previewDocument(path:string, scheme:string) {
  */
 function openDocument(path:string, scheme:string) {
   if(Platform.OS === 'ios')
-    return RNFetchBlob.openDocument('file://' + path, scheme)
+    return RNFetchBlob.openDocument('file://' + path, scheme);
   else
     return Promise.reject('RNFetchBlob.previewDocument only supports IOS.')
 }

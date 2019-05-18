@@ -10,10 +10,10 @@ import EventTarget from './EventTarget'
 
 const RNFetchBlob = NativeModules.RNFetchBlob;
 
-const log = new Log('Blob')
-const blobCacheDir = fs.dirs.DocumentDir + '/RNFetchBlob-blobs/'
+const log = new Log('Blob');
+const blobCacheDir = fs.dirs.DocumentDir + '/RNFetchBlob-blobs/';
 
-log.disable()
+log.disable();
 // log.level(3)
 
 /**
@@ -54,7 +54,7 @@ export default class Blob extends EventTarget {
 
   static setLog(level:number) {
     if(level === -1)
-      log.disable()
+      log.disable();
     else
       log.level(level)
   }
@@ -71,22 +71,22 @@ export default class Blob extends EventTarget {
    *                         will not invoke blob created event automatically.
    */
   constructor(data:any, cType:any, defer:boolean) {
-    super()
-    cType = cType || {}
-    this.cacheName = getBlobName()
-    this.isRNFetchBlobPolyfill = true
-    this.isDerived = defer
-    this.type = cType.type || 'text/plain'
-    log.verbose('Blob constructor called', 'mime', this.type, 'type', typeof data, 'length', data?  data.length:0)
-    this._ref = blobCacheDir + this.cacheName
-    let p = null
+    super();
+    cType = cType || {};
+    this.cacheName = getBlobName();
+    this.isRNFetchBlobPolyfill = true;
+    this.isDerived = defer;
+    this.type = cType.type || 'text/plain';
+    log.verbose('Blob constructor called', 'mime', this.type, 'type', typeof data, 'length', data?  data.length:0);
+    this._ref = blobCacheDir + this.cacheName;
+    let p = null;
     if(!data)
-      data = ''
+      data = '';
     if(data.isRNFetchBlobPolyfill) {
-      log.verbose('create Blob cache file from Blob object')
-      let size = 0
-      this._ref = String(data.getRNFetchBlobRef())
-      let orgPath = this._ref
+      log.verbose('create Blob cache file from Blob object');
+      let size = 0;
+      this._ref = String(data.getRNFetchBlobRef());
+      let orgPath = this._ref;
 
       p = fs.exists(orgPath)
             .then((exist) =>  {
@@ -95,49 +95,49 @@ export default class Blob extends EventTarget {
                          .then((size) => Promise.resolve(size))
                          .catch((err) => {
                            throw `RNFetchBlob Blob file creation error, ${err}`
-                         })
+                         });
               else
                 throw `could not create Blob from path ${orgPath}, file not exists`
             })
     }
     // process FormData
     else if(data instanceof FormData) {
-      log.verbose('create Blob cache file from FormData', data)
-      let boundary = `RNFetchBlob-${this.cacheName}-${Date.now()}`
-      this.multipartBoundary = boundary
-      let parts = data.getParts()
-      let formArray = []
+      log.verbose('create Blob cache file from FormData', data);
+      let boundary = `RNFetchBlob-${this.cacheName}-${Date.now()}`;
+      this.multipartBoundary = boundary;
+      let parts = data.getParts();
+      let formArray = [];
       if(!parts) {
         p = fs.writeFile(this._ref, '', 'utf8')
       }
       else {
         for(let i in parts) {
-          formArray.push('\r\n--'+boundary+'\r\n')
-          let part = parts[i]
+          formArray.push('\r\n--'+boundary+'\r\n');
+          let part = parts[i];
           for(let j in part.headers) {
             formArray.push(j + ': ' +part.headers[j] + '\r\n')
           }
-          formArray.push('\r\n')
+          formArray.push('\r\n');
           if(part.isRNFetchBlobPolyfill)
-            formArray.push(part)
+            formArray.push(part);
           else
             formArray.push(part.string)
         }
-        log.verbose('FormData array', formArray)
-        formArray.push('\r\n--'+boundary+'--\r\n')
+        log.verbose('FormData array', formArray);
+        formArray.push('\r\n--'+boundary+'--\r\n');
         p = createMixedBlobData(this._ref, formArray)
       }
     }
     // if the data is a string starts with `RNFetchBlob-file://`, append the
     // Blob data from file path
     else if(typeof data === 'string' && data.startsWith('RNFetchBlob-file://')) {
-      log.verbose('create Blob cache file from file path', data)
+      log.verbose('create Blob cache file from file path', data);
       // set this flag so that we know this blob is a wrapper of an existing file
-      this._isReference = true
-      this._ref = String(data).replace('RNFetchBlob-file://', '')
-      let orgPath = this._ref
+      this._isReference = true;
+      this._ref = String(data).replace('RNFetchBlob-file://', '');
+      let orgPath = this._ref;
       if(defer)
-        return
+        return;
       else {
         p = fs.stat(orgPath)
               .then((stat) =>  {
@@ -147,17 +147,17 @@ export default class Blob extends EventTarget {
     }
     // content from variable need create file
     else if(typeof data === 'string') {
-      let encoding = 'utf8'
-      let mime = String(this.type)
+      let encoding = 'utf8';
+      let mime = String(this.type);
       // when content type contains application/octet* or *;base64, RNFetchBlob
       // fs will treat it as BASE64 encoded string binary data
       if(/(application\/octet|\;base64)/i.test(mime))
-        encoding = 'base64'
+        encoding = 'base64';
       else
-        data = data.toString()
+        data = data.toString();
       // create cache file
-      this.type = String(this.type).replace(/;base64/ig, '')
-      log.verbose('create Blob cache file from string', 'encode', encoding)
+      this.type = String(this.type).replace(/;base64/ig, '');
+      log.verbose('create Blob cache file from string', 'encode', encoding);
       p = fs.writeFile(this._ref, data, encoding)
             .then((size) => {
               return Promise.resolve(size)
@@ -170,16 +170,16 @@ export default class Blob extends EventTarget {
     // }
     // when input is an array of mixed data types, create a file cache
     else if(Array.isArray(data)) {
-      log.verbose('create Blob cache file from mixed array', data)
+      log.verbose('create Blob cache file from mixed array', data);
       p = createMixedBlobData(this._ref, data)
     }
     else {
-      data = data.toString()
+      data = data.toString();
       p = fs.writeFile(this._ref, data, 'utf8')
             .then((size) => Promise.resolve(size))
     }
     p && p.then((size) => {
-      this.size = size
+      this.size = size;
       this._invokeOnCreateEvent()
     })
     .catch((err) => {
@@ -196,9 +196,9 @@ export default class Blob extends EventTarget {
    * @return {Blob} The Blob object instance itself
    */
   onCreated(fn:() => void):Blob {
-    log.verbose('#register blob onCreated', this._blobCreated)
+    log.verbose('#register blob onCreated', this._blobCreated);
     if(!this._blobCreated)
-      this._onCreated.push(fn)
+      this._onCreated.push(fn);
     else {
       fn(this)
     }
@@ -231,31 +231,31 @@ export default class Blob extends EventTarget {
    */
   slice(start:?number, end:?number, contentType:?string=''):Blob {
     if(this._closed)
-      throw 'Blob has been released.'
-    log.verbose('slice called', start, end, contentType)
+      throw 'Blob has been released.';
+    log.verbose('slice called', start, end, contentType);
 
 
-    let resPath = blobCacheDir + getBlobName()
-    let pass = false
-    log.debug('fs.slice new blob will at', resPath)
-    let result = new Blob(RNFetchBlob.wrap(resPath), { type : contentType }, true)
+    let resPath = blobCacheDir + getBlobName();
+    let pass = false;
+    log.debug('fs.slice new blob will at', resPath);
+    let result = new Blob(RNFetchBlob.wrap(resPath), { type : contentType }, true);
     fs.exists(blobCacheDir)
     .then((exist) => {
       if(exist)
-        return Promise.resolve()
+        return Promise.resolve();
       return fs.mkdir(blobCacheDir)
     })
     .then(() => fs.slice(this._ref, resPath, start, end))
     .then((dest) => {
-      log.debug('fs.slice done', dest)
-      result._invokeOnCreateEvent()
+      log.debug('fs.slice done', dest);
+      result._invokeOnCreateEvent();
       pass = true
     })
     .catch((err) => {
-      console.warn('Blob.slice failed:', err)
+      console.warn('Blob.slice failed:', err);
       pass = true
-    })
-    log.debug('slice returning new Blob')
+    });
+    log.debug('slice returning new Blob');
 
     return result
   }
@@ -268,7 +268,7 @@ export default class Blob extends EventTarget {
    */
   readBlob(encoding:string):Promise<any> {
     if(this._closed)
-      throw 'Blob has been released.'
+      throw 'Blob has been released.';
     return fs.readFile(this._ref, encoding || 'utf8')
   }
 
@@ -279,8 +279,8 @@ export default class Blob extends EventTarget {
    */
   close() {
     if(this._closed)
-      return Promise.reject('Blob has been released.')
-    this._closed = true
+      return Promise.reject('Blob has been released.');
+    this._closed = true;
     return fs.unlink(this._ref).catch((err) => {
       console.warn(err)
     })
@@ -288,8 +288,8 @@ export default class Blob extends EventTarget {
 
   safeClose() {
     if(this._closed)
-      return Promise.reject('Blob has been released.')
-    this._closed = true
+      return Promise.reject('Blob has been released.');
+    this._closed = true;
     if(!this._isReference) {
       return fs.unlink(this._ref).catch((err) => {
         console.warn(err)
@@ -301,9 +301,9 @@ export default class Blob extends EventTarget {
   }
 
   _invokeOnCreateEvent() {
-    log.verbose('invoke create event', this._onCreated)
-    this._blobCreated = true
-    let fns = this._onCreated
+    log.verbose('invoke create event', this._onCreated);
+    this._blobCreated = true;
+    let fns = this._onCreated;
     for(let i in fns) {
       if(typeof fns[i] === 'function') {
         fns[i](this)
@@ -331,18 +331,18 @@ function getBlobName() {
  */
 function createMixedBlobData(ref, dataArray) {
   // create an empty file for store blob data
-  let p = fs.writeFile(ref, '')
-  let args = []
-  let size = 0
+  let p = fs.writeFile(ref, '');
+  let args = [];
+  let size = 0;
   for(let i in dataArray) {
-    let part = dataArray[i]
+    let part = dataArray[i];
     if(!part)
-      continue
+      continue;
     if(part.isRNFetchBlobPolyfill) {
       args.push([ref, part._ref, 'uri'])
     }
     else if(typeof part === 'string')
-      args.push([ref, part, 'utf8'])
+      args.push([ref, part, 'utf8']);
     // TODO : ArrayBuffer
     // else if (part instanceof ArrayBuffer) {
     //
@@ -353,10 +353,10 @@ function createMixedBlobData(ref, dataArray) {
   // start write blob data
   for(let i in args) {
     p = p.then(function(written){
-      let arg = this
+      let arg = this;
       if(written)
-        size += written
-      log.verbose('mixed blob write', args[i], written)
+        size += written;
+      log.verbose('mixed blob write', args[i], written);
       return fs.appendFile(...arg)
     }.bind(args[i]))
   }

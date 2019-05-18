@@ -14,7 +14,7 @@ export default class File extends Blob {
         reject(new TypeError('data is undefined'))
       }
       new File(data, cType).onCreated((f) => {
-        f.name = name
+        f.name = name;
         resolve(f)
       })
     })

@@ -8,7 +8,7 @@ import {
  NativeAppEventEmitter,
 } from 'react-native'
 
-const RNFetchBlob = NativeModules.RNFetchBlob
+const RNFetchBlob = NativeModules.RNFetchBlob;
 
 export default class RNFetchBlobWriteStream {
 
@@ -17,22 +17,22 @@ export default class RNFetchBlobWriteStream {
   append : boolean;
 
   constructor(streamId:string, encoding:string, append:boolean) {
-    this.id = streamId
-    this.encoding = encoding
+    this.id = streamId;
+    this.encoding = encoding;
     this.append = append
   }
 
   write(data:string): Promise<RNFetchBlobWriteStream> {
     return new Promise((resolve, reject) => {
       try {
-        let method = this.encoding === 'ascii' ? 'writeArrayChunk' : 'writeChunk'
+        let method = this.encoding === 'ascii' ? 'writeArrayChunk' : 'writeChunk';
         if(this.encoding.toLocaleLowerCase() === 'ascii' && !Array.isArray(data)) {
-            reject(new Error('ascii input data must be an Array'))
+            reject(new Error('ascii input data must be an Array'));
             return
         }
         RNFetchBlob[method](this.id, data, (error) => {
           if(error)
-            reject(new Error(error))
+            reject(new Error(error));
           else
             resolve(this)
         })

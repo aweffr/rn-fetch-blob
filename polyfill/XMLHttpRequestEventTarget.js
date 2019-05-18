@@ -5,9 +5,9 @@
 import EventTarget from './EventTarget.js'
 import Log from '../utils/log.js'
 
-const log = new Log('XMLHttpRequestEventTarget')
+const log = new Log('XMLHttpRequestEventTarget');
 
-log.disable()
+log.disable();
 // log.level(3)
 
 export default class XMLHttpRequestEventTarget extends EventTarget {
@@ -21,40 +21,40 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
   _onloadend : (e:Event) => void = () => {};
 
   constructor() {
-    super()
+    super();
     log.info('constructor called')
   }
 
   dispatchEvent(event:string, e:Event) {
-    log.debug('dispatch event', event, e)
-    super.dispatchEvent(event, e)
+    log.debug('dispatch event', event, e);
+    super.dispatchEvent(event, e);
     switch(event) {
       case 'abort' :
-        this._onabort(e)
+        this._onabort(e);
       break;
       case 'error' :
-        this._onerror(e)
+        this._onerror(e);
       break;
       case 'load' :
-        this._onload(e)
+        this._onload(e);
       break;
       case 'loadstart' :
-        this._onloadstart(e)
+        this._onloadstart(e);
       break;
       case 'loadend' :
-        this._onloadend(e)
+        this._onloadend(e);
       break;
       case 'progress' :
-        this._onprogress(e)
+        this._onprogress(e);
       break;
       case 'timeout' :
-        this._ontimeout(e)
+        this._ontimeout(e);
       break;
     }
   }
 
   set onabort(fn:(e:Event) => void) {
-    log.info('set onabort')
+    log.info('set onabort');
     this._onabort = fn
   }
 
@@ -62,7 +62,7 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
     return this._onabort
   }
   set onerror(fn:(e:Event) => void) {
-    log.info('set onerror')
+    log.info('set onerror');
     this._onerror = fn
   }
 
@@ -71,7 +71,7 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
   }
 
   set onload(fn:(e:Event) => void) {
-    log.info('set onload', fn)
+    log.info('set onload', fn);
     this._onload = fn
   }
 
@@ -80,7 +80,7 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
   }
 
   set onloadstart(fn:(e:Event) => void) {
-    log.info('set onloadstart')
+    log.info('set onloadstart');
     this._onloadstart = fn
   }
 
@@ -89,7 +89,7 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
   }
 
   set onprogress(fn:(e:Event) => void) {
-    log.info('set onprogress')
+    log.info('set onprogress');
     this._onprogress = fn
   }
 
@@ -98,7 +98,7 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
   }
 
   set ontimeout(fn:(e:Event) => void) {
-    log.info('set ontimeout')
+    log.info('set ontimeout');
     this._ontimeout = fn
   }
 
@@ -107,7 +107,7 @@ export default class XMLHttpRequestEventTarget extends EventTarget {
   }
 
   set onloadend(fn:(e:Event) => void) {
-    log.info('set onloadend')
+    log.info('set onloadend');
     this._onloadend = fn
   }
 

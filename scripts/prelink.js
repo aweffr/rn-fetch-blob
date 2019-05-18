@@ -6,22 +6,22 @@ try {
   var PACKAGE_JSON = process.cwd() + '/package.json';
   var package = JSON.parse(fs.readFileSync(PACKAGE_JSON));
   var APP_NAME = package.name;
-  var PACKAGE_GRADLE = process.cwd() + '/node_modules/rn-fetch-blob/android/build.gradle'
+  var PACKAGE_GRADLE = process.cwd() + '/node_modules/rn-fetch-blob/android/build.gradle';
   var VERSION = checkVersion();
 
   console.log('RNFetchBlob detected app version => ' + VERSION);
 
   if(VERSION < 0.28) {
-    console.log('You project version is '+ VERSION + ' which may not compatible to rn-fetch-blob 7.0+, please consider upgrade your application template to react-native 0.27+.')
+    console.log('You project version is '+ VERSION + ' which may not compatible to rn-fetch-blob 7.0+, please consider upgrade your application template to react-native 0.27+.');
     // add OkHttp3 dependency fo pre 0.28 project
     var main = fs.readFileSync(PACKAGE_GRADLE);
-    console.log('adding OkHttp3 dependency to pre 0.28 project .. ')
+    console.log('adding OkHttp3 dependency to pre 0.28 project .. ');
     main = String(main).replace('//{RNFetchBlob_PRE_0.28_DEPDENDENCY}', "compile 'com.squareup.okhttp3:okhttp:3.4.1'");
     fs.writeFileSync(PACKAGE_GRADLE, main);
     console.log('adding OkHttp3 dependency to pre 0.28 project .. ok')
   }
 
-  console.log('Add Android permissions => ' + (addAndroidPermissions == "true"))
+  console.log('Add Android permissions => ' + (addAndroidPermissions == "true"));
 
   if(addAndroidPermissions) {
 
@@ -37,12 +37,12 @@ try {
         data = String(data).replace(
           '<uses-permission android:name="android.permission.INTERNET" />',
           '<uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> '
-        )
+        );
         // append DOWNLOAD_COMPLETE intent permission
         data = String(data).replace(
           '<category android:name="android.intent.category.LAUNCHER" />',
           '<category android:name="android.intent.category.LAUNCHER" />\n     <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>'
-        )
+        );
         fs.writeFileSync(MANIFEST_PATH, data);
         console.log('RNFetchBlob patching AndroidManifest.xml .. ok');
 
